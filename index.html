@@ -44,61 +44,8 @@
       justify-content: center;
       align-items: center;
     }
-.videoBox {
-  position: absolute;
-  overflow: hidden;
-  border-radius: 5px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.38);
-  cursor: pointer;
-  text-align: center;
-  background: rgba(0,0,0,0.08);
-  border: 2px solid transparent;
-  transition: 
-    border 0.5s cubic-bezier(.55,0,.1,1),
-    box-shadow 0.4s cubic-bezier(.55,0,.1,1),
-    transform 0.7s cubic-bezier(.68,-0.55,.27,1.55);
-}
-
-.videoBox:hover {
-  transform: scale(1.08) rotate(-1.5deg);
-  z-index: 10;
-  border-radius: 40px;
-  border: 2px solid #1fa8ff;
-  box-shadow: 0 0 36px 4px #1fa8ff33, 0 0 20px rgba(0,0,0,0.38);
-}
-
-    .videoBox .preview {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-    .videoBox video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: none;
-    }
-    .videoBox .hover-preview {
-      display: none;
-      position: absolute;
-      top: 0; left: 0; width: auto; height: 100%;
-      z-index: 2;
-      border-radius: 40px;
-      box-shadow: 0 4px 32px #000d;
-      background: #222b;
-      border: 2px solid #0072f5;
-    }
-    .videoBox.show-hover-preview .hover-preview {
-      display: block;
-    }
-    .videoBox .hover-preview video {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .label {
+	
+	    .label {
       position: absolute;
       bottom: 8px;
       left: 0;
@@ -117,23 +64,64 @@
     .top-left { width: auto; height: auto; top: 70px; left: 50px; }
     .top-right { width: auto; height: auto; top: 40px; right: 50px; }
     .bottom-right { width: auto; height: 250px; top: 420px; right: 60px; }
-    .tooltip {
+	
+  
+	
+.videoBox {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 25px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.38);
+  cursor: pointer;
+  text-align: center;
+  background: rgba(0,0,0,0.08);
+  border: 2px solid transparent;
+  transition: 
+    border 0.5s cubic-bezier(.55,0,.1,1),
+    box-shadow 0.4s cubic-bezier(.55,0,.1,1),
+    transform 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+.videoBox:hover {
+  transform: scale(1.08) rotate(-1.5deg);
+  z-index: 10;
+  border-radius: 25px;
+  border: 2px solid #1fa8ff;
+  box-shadow: 0 0 36px 4px #1fa8ff33, 0 0 20px rgba(0,0,0,0.38);
+}
+
+    .videoBox .preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+    .videoBox video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+    .videoBox .hover-preview {
+      display: none;
       position: absolute;
-      bottom: 54px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.84);
-      font-size: 16px;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.28s;
-      white-space: nowrap;
-      z-index: 120;
-      box-shadow: 0 0 10px #0008;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 2;
+      box-shadow: 0 4px 32px #000d;
+      background: #222b;
+      border: 2px solid #0072f5;
     }
-    .videoBox.show-tooltip .tooltip {
-      opacity: 1;
+    .videoBox.show-hover-preview .hover-preview {
+      display: block;
     }
+    .videoBox .hover-preview video {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+
+	
+
     #overlay {
       display: none;
       position: fixed;
@@ -421,7 +409,7 @@ window.onload = function() {
     (function(box, idx) {
       setTimeout(function() {
         box.classList.add('show');
-      }, 1800 + idx * 350);
+      }, 1200 + idx * 350);
     })(boxes[i], i);
   }
 };
