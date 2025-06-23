@@ -4,15 +4,25 @@
   <meta charset="UTF-8">
   <title>CNC UI Calibration page</title>
   <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: #444;
-      width: 1280px;
-      height: 720px;
-      overflow: hidden;
-      position: relative;
-    }
+   body, html {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+#fixedContainer {
+  width: 1280px;
+  height: 720px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: transparent; /* หรือเปลี่ยนเป็นสีอื่นได้ */
+  box-shadow: 0 0 60px #000b;
+  overflow: hidden;
+}
 
     #bgVideo {
       position: fixed;
@@ -102,23 +112,24 @@
     }
 
     #overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0,0,0,0.75);
-      z-index: 999;
-      justify-content: center;
-      align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1280px;
+  height: 720px;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  display: none; /* วางตรงนี้ที่เดียวเท่านั้น */
     }
 
     #overlay video {
-      width: 80%;
-      max-width: 720px;
-      border: 4px solid white;
-      border-radius: 10px;
+  width: 1024px;   /* 80% ของ 1280 */
+  height: 576px;   /* 80% ของ 720 */
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 0 20px #000a;
     }
 
     #overlay .close-btn {
@@ -197,7 +208,7 @@
   </style>
 </head>
 <body>
-
+<div id="fixedContainer">
   <video autoplay muted loop id="bgVideo">
     <source src="bgsetupv2.mp4" type="video/mp4">
   </video>
@@ -234,7 +245,7 @@
   </div>
 
   <div class="image-button"  onclick="if(event.ctrlKey){ahk.parameter(event);}else{openOverlay('paramini.mp4');}">
-    <img src="paramini.png" alt="ปุ่มรูปภาพ">
+    <img src="parameter.png" alt="ปุ่มรูปภาพ">
 	<div class="video-caption">ตั้งค่าพารามิเตอร์<br>Parameter Setup</div>
   </div>
 
