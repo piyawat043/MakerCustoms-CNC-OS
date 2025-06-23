@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>CNC Probe UI</title>
+  <meta name="viewport" content="width=1280, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+   body, html {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+#fixedContainer {
+  width: 1280px;
+  height: 720px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: transparent; /* หรือเปลี่ยนเป็นสีอื่นได้ */
+  box-shadow: 0 0 60px #000b;
+  overflow: hidden;
+}
+
+#bgVideo {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1280px; /* ขนาดดั้งเดิมของวิดีโอ */
+    height: 720px;
+    object-fit: none; /* รักษาขนาดดั้งเดิม ไม่ยืดหรือครอบตัด */
+    z-index: -1;
+    opacity: 1;
+    pointer-events: none;
+}
+
+#mainContainer {
+    position: relative;
+    width: 1280px; /* ขนาดใหญ่กว่าวิดีโอ เช่น Full HD */
+    height: 720px;
+    margin: 0 auto; /* จัดกึ่งกลางคอนเทนเนอร์ในหน้าจอ */
+}
+ 
+    .icon-button:hover {
+    transform: scale(1.3);
+    transition: transform 0.2s ease;
+    z-index: 10;
+  }
+   .icon-button {
+    transition: transform 0.2s ease;
+    position: absolute;
+    cursor: pointer;
+  }
+    .icon-button img {
+      display: block;
+      width: 80%;
+      height: 80%;
+    }
+
+
+#overlayPlayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1280px;
+  height: 720px;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  display: none; /* วางตรงนี้ที่เดียวเท่านั้น */
+}
+
+
+
+#overlayPlayer video {
+  width: 1024px;   /* 80% ของ 1280 */
+  height: 576px;   /* 80% ของ 720 */
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 0 20px #000a;
+}
+
+#overlayPlayer .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  font-size: 24px;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10001;
+}
+
+	
+	
+  #followTooltip {
+    position: fixed;
+    z-index: 10000;
+    background: rgba(0, 51, 102, 0.85);
+    color: white;
+    font-size: 18px;
+    text-align: left;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+  
+  
+.overlay-text {
+  position: absolute;
+  right: 40px;
+  bottom: 30px;
+  text-align: right;
+  color: #ffffff;
+  font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+  max-width: 420px;
+  z-index: 1000;
+}
+
+.overlay-text p {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1;
+  white-space: pre-line;
+}
+
+.overlay-text span {
+  font-size: 17px;
+  opacity: 0.9;
+  line-height: 1.5;
+  display: block;
+  margin-top: 2px;
+}
+
+.page-title {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 38px;
+  color: #ffffff;
+  font-weight: bold;
+  text-shadow: 0 0 14px rgba(0, 123, 255, 0.7);
+  z-index: 999;
+  font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
+  line-height: 1.2;
+}
+.page-title span {
+  display: block;
+  font-size: 16px;
+  margin-top: 2px;
+  opacity: 0.85;
+  letter-spacing: 0.3px;
+}
+
+/* === Centralized Tooltip === */
+#centerTooltip {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.9);     /* พื้นหลังดำโปร่งเล็กน้อย */
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 45px;                     /* ปรับขนาดตัวอักษรตามชอบ */
+  white-space: normal;                 /* ให้ <br> ขึ้นบรรทัดใหม่ */
+  text-align: center;
+  display: none;
+  z-index: 10000;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  transition: opacity 0.2s ease;
+}
+#centerTooltip.show {
+  display: block;
+  opacity: 1;
+}
+
+
+  </style>
+</head>
+<body>
+<div id="fixedContainer">
+
+  <video id="bgVideo" autoplay muted loop playsinline>
+    <source src="bgmainv2.mp4" type="video/mp4">
+  </video>
+<div class="page-title">
+  ระบบวัดอัจฉริยะ 6 จุด
+  <span>"เคลื่อนไหวให้แม่น... ก่อนเครื่องจักรเริ่มทำงาน"</span>
+</div>
+
+  <div id="mainContainer">
+  
+  <div class="icon-button"
+     style="left:50px; top:230px;"
+     data-tooltip="
+       หาศูนย์กลางวงกลม<br> 3 จุดด้วยจอยสติกส์<br>
+       (3-point circle with joystick)<br><br>
+       <img src='probe3pc.png' alt='Info' style='width:250px;height:auto;'>
+     "
+     onclick="if(event.ctrlKey){ahk.joycircle3p(event);}else{openOverlay('play_3pjoy.mp4');}">
+  <img src="3pjoy.png" alt="3pjoy">
+</div>
+
+	
+    <div class="icon-button"
+	style="left:185px; top:0px;" 
+	data-tooltip="หาศูนย์กลางวัดวงกลม<br>
+	3 จุดด้วยกล้อง<br>
+	(3-point circle with camera)<br><br>
+	       <img src='cam-3pcircle.png' alt='Info' style='width:250px;height:auto;'>"
+	onclick="if(event.ctrlKey){ahk.camcircle3p(event);}else{openOverlay('excircle3p.mp4');}">
+      <img src="3pcam.png" alt="3pcam">
+    </div>
+	
+  <div class="icon-button"
+       style="left:222px; top:348px;"
+       data-tooltip="
+         หาตำแหน่งมุมซ้ายล่าง<br> 4 จุดด้วยกล้อง<br>
+         (4-point corner with camera)<br><br>
+         <img src='cam-4pconner.png' alt='Info' style='width:250px;height:auto;'>
+       "
+       onclick="if(event.ctrlKey){ahk.camcorner4p(event);}else{openOverlay('ex4pcon.mp4');}">
+    <img src="4pcam.png" alt="4pcam">
+  </div>
+
+  <div class="icon-button"
+       style="left:240px; top:501px;"
+       data-tooltip="
+         หาตำแหน่งมุมซ้ายล่าง<br> 4 จุดด้วยจอยสติก<br>
+         (4-point corner with joystick)<br><br>
+         <img src='probe4pv2.png' alt='Info' style='width:250px;height:auto;'>
+       "
+       onclick="if(event.ctrlKey){ahk.joycorner4p(event);}else{openOverlay('play_4pjoy.mp4');}">
+    <img src="4pjoy.png" alt="4pjoy">
+  </div>
+
+  <div id="btn-center-6p-joy" class="icon-button"
+       style="left:580px; top:510px;"
+       data-tooltip="
+         หาศูนย์กลางชิ้นงาน<br> 6 จุด ด้วยจอยสติก<br>
+         (6-point center with joystick)<br><br>
+         <img src='6pjoyv2.png' alt='Info' style='width:250px;height:auto;'>
+       "
+       onclick="if(event.ctrlKey){ahk.joycenter6p(event);}else{openOverlay('newxyztoolv2.mp4');}">
+    <img src="6pjoy.png" alt="6pjoy">
+  </div>
+
+  <div id="btn-center-6p-cam" class="icon-button"
+       style="left:675px; top:110px;"
+       data-tooltip="
+         หาศูนย์กลางชิ้นงาน<br> 6 จุด ด้วยกล้อง<br>
+         (6-point center with camera)<br><br>
+         <img src='6pcamerav2.png' alt='Info' style='width:250px;height:auto;'>
+       "
+       onclick="if(event.ctrlKey){ahk.camcenter6p(event);}else{openOverlay('excam6p.mp4');}">
+    <img src="6pcam.png" alt="6pcam">
+  </div>
+
+  <div class="icon-button"
+       style="left:989px; top:331px;"
+       data-tooltip="
+         หาระดับผิวชิ้นงานด้วยจอยสติก<br>
+         (Save Z level with joystick)<br><br>
+         <img src='zsavev22.png' alt='Info' style='width:250px;height:auto;'>
+       "
+       onclick="if(event.ctrlKey){ahk.joyzsave(event);}else{openOverlay('play_zsavejoy.mp4');}">
+    <img src="zsavejoy.png" alt="zsavejoy">
+  </div>
+
+  <div class="icon-button"
+       style="left:1040px; top:48px;"
+       data-tooltip="
+         หาระดับผิวชิ้นงานด้วยกล้อง<br>
+         (Save Z level with camera)<br><br>
+         <img src='cam-zsave.png' alt='Info' style='width:250px;height:auto;'>
+       "
+       onclick="if(event.ctrlKey){ahk.camzsave(event);}else{openOverlay('exzsave.mp4');}">
+    <img src="zsavecam.png" alt="zsavecam">
+  </div>
+
+  <div id="overlayPlayer">
+    <button class="close-btn" onclick="closeOverlayPlayer()">×</button>
+    <video id="bigVideo" controls autoplay></video>
+  </div>
+
+  <div id="centerTooltip"></div>
+
+<div id="followTooltip">
+  - คลิกเพื่อดูวีดีโอ<br>
+  &nbsp;&nbsp;&nbsp;(Click to preview video)<br>
+  - 🔒 ต้องกด Ctrl ค้างก่อนคลิกเพื่อยืนยันการสั่งงาน<br>
+  &nbsp;&nbsp;&nbsp;(Hold Ctrl while clicking to confirm command)
+</div>
+
+<div class="overlay-text">
+  <p>
+    จะไม่มีอะไรเกิดขึ้นทั้งสิ้น<br>
+    จนกว่าจะมีบางสิ่งเริ่มเคลื่อนไหว<br>
+    <span>Nothing happens until something moves.<br>— อัลเบิร์ต ไอน์สไตน์ (Albert Einstein)</span>
+  </p>
+</div>
+
+
+
+<script>
+
+  function openOverlay(src) {
+    const video = document.getElementById('bigVideo');
+    video.src = src;
+    document.getElementById('overlayPlayer').style.display = 'flex';
+    setTimeout(function(){ video.play(); }, 200);
+  }
+
+  function closeOverlayPlayer() {
+    const v = document.getElementById('bigVideo');
+    v.pause();
+    v.src = '';
+    document.getElementById('overlayPlayer').style.display = 'none';
+  }
+
+  function getParentByClass(el, className) {
+    while (el && el !== document) {
+      if (el.className && el.className.indexOf(className) !== -1) return el;
+      el = el.parentNode;
+    }
+    return null;
+  }
+
+  const tooltip = document.getElementById('followTooltip');
+  document.addEventListener('mousemove', function(e) {
+    var el = e.target;
+    while (el && el !== document.body) {
+      if (el.className && el.className.indexOf('icon-button') !== -1) {
+        tooltip.style.opacity = '0';
+        return;
+      }
+      el = el.parentNode;
+    }
+    tooltip.style.opacity = '1';
+    tooltip.style.left = (e.pageX + 12) + 'px';
+    tooltip.style.top = (e.pageY + 16) + 'px';
+  });
+
+// --- Centralized Tooltip via data-tooltip ---
+
+    // --- Centralized Tooltip via data-tooltip (with HTML support) ---
+   // --- Centralized Tooltip via data-tooltip (with HTML support) ---
+    (function(){
+      var tip = document.getElementById('centerTooltip');
+      var buttons = document.querySelectorAll('.icon-button[data-tooltip]');
+      for(var i=0; i<buttons.length; i++){
+        (function(btn){
+          btn.addEventListener('mouseenter', function(){
+            tip.innerHTML = btn.getAttribute('data-tooltip');
+            // Top-left positioning for 6-point buttons
+            if(btn.id === 'btn-center-6p-joy' || btn.id === 'btn-center-6p-cam'){
+              tip.style.transform = 'none';
+              tip.style.left = '10px';
+              tip.style.top = '10px';
+            } else {
+              tip.style.transform = 'translate(-50%, -50%)';
+              tip.style.left = '50%';
+              tip.style.top = '50%';
+            }
+            tip.classList.add('show');
+          });
+          btn.addEventListener('mouseleave', function(){
+            tip.classList.remove('show');
+          });
+        })(buttons[i]);
+      }
+    })();
+
+</script>
+</body>
+</html>
+
