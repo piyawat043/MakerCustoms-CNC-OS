@@ -3,39 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <title>CNC UI main</title>
-  <meta name="viewport" content="width=1270, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-   body, html {
-  margin: 0;
-  padding: 0;
-  width: 100vw;
-  height: 100vh;
+html, body {
+  margin: 0; padding: 0;
+  width: 100vw; height: 100vh;
   overflow: hidden;
-  background: #000;
 }
 #fixedContainer {
-  width: 1280px;
+  width: 1280px; /* ขนาดดีไซน์เดิม */
   height: 720px;
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background: transparent; /* หรือเปลี่ยนเป็นสีอื่นได้ */
-  box-shadow: 0 0 60px #000b;
-  overflow: hidden;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%) scale(var(--ui-scale,1));
 }
 
-    #bgVideo {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      z-index: -1;
-      opacity: 0.85;
-      pointer-events: none;
-    }
+
+  #bgVideo {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+  opacity: 0.85;
+  pointer-events: none;
+  /* เพิ่มป้องกัน video กระพริบใน iOS Safari */
+  background: #000;
+}
+
     #mainContainer {
       position: relative;
       width: 100%;
@@ -249,12 +244,12 @@
   </style>
 </head>
 <body>
-  <div id="fixedContainer">
+
 
 <video id="bgVideo" class="fadein" autoplay muted loop playsinline>
   <source src="bgprobev235.mp4" type="video/mp4">
 </video>
-
+  <div id="fixedContainer">
 <!-- Title -->
 <div class="page-title fadein">
   MakerCustoms CNC OS
@@ -413,6 +408,15 @@ window.onload = function() {
     })(boxes[i], i);
   }
 };
+
+function updateScale() {
+  const baseW = 1280, baseH = 720;
+  const scale = Math.min(window.innerWidth/baseW, window.innerHeight/baseH);
+  document.documentElement.style.setProperty('--ui-scale', scale);
+}
+window.addEventListener('resize', updateScale);
+window.addEventListener('orientationchange', updateScale);
+updateScale();
 
 
 
