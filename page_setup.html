@@ -290,21 +290,32 @@ html, body {
       overlay.style.display = 'none';
     }
 
-  const tooltip = document.getElementById('followTooltip');
-  document.addEventListener('mousemove', function(e) {
-    var el = e.target;
-    while (el && el !== document.body) {
-      if (el.className && el.className.indexOf('icon-button') !== -1) {
-        tooltip.style.opacity = '0';
-        return;
-      }
-      el = el.parentNode;
+const tooltip = document.getElementById('followTooltip');
+const container = document.getElementById('fixedContainer');
+
+document.addEventListener('mousemove', function(e) {
+  var el = e.target;
+  while (el && el !== document.body) {
+    if (el.className && el.className.indexOf('icon-button') !== -1) {
+      tooltip.style.opacity = '0';
+      return;
     }
-    tooltip.style.opacity = '1';
-    tooltip.style.left = (e.pageX + 12) + 'px';
-    tooltip.style.top = (e.pageY + 16) + 'px';
-  });
-  
+    el = el.parentNode;
+  }
+  // หาค่า scale
+  const scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--ui-scale')) || 1;
+  // หา bounding rect ของ container (บนจอจริง)
+  const rect = container.getBoundingClientRect();
+  // คำนวณตำแหน่งภายใน container (แกน X,Y)
+  const offsetX = (e.clientX - rect.left) / scale;
+  const offsetY = (e.clientY - rect.top) / scale;
+
+  // ตำแหน่ง tooltip = ตำแหน่ง pointer ใน container + offset
+  tooltip.style.left = (rect.left + offsetX * scale + 12) + 'px';
+  tooltip.style.top  = (rect.top + offsetY * scale + 16) + 'px';
+  tooltip.style.opacity = '1';
+});
+
 
 function updateScale() {
   const baseW = 1280, baseH = 720;
