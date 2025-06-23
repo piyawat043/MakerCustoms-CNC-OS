@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>CNC UI Calibration page</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #444;
+      width: 1280px;
+      height: 720px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100vw;
+      min-height: 100vh;
+      z-index: -99;
+      object-fit: cover;
+      opacity: 0.4;
+    }
+
+    #header-bar {
+      width: 720px;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: absolute;
+      top: 0;
+      z-index: 10;
+    }
+
+    #header-bar button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #444;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .video-button, .image-button {
+      position: absolute;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .video-button:hover,
+    .image-button:hover {
+      transform: scale(1.1);
+    }
+
+    video, img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .v1 {
+      width: 305.5px;
+      height: 361.2px;
+      left: 80px;
+      top: 100px;
+    }
+
+    .v2 {
+      width: auto;
+      height: 340px;
+      left: 500px;
+      top: 120px;
+    }
+
+    .v3 {
+      width: 308.8px;
+      height: 359.2px;
+      left: 900.3px;
+      top: 100px;
+    }
+	    .v4 {
+      width: auto;
+      height: 200px;
+      left: 450px;
+      top: 480px;
+    }
+
+    .image-button {
+      width: 190px;
+      height: 210px;
+      left: 820px;
+      top: 470px;
+      cursor: pointer;
+    }
+
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.75);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #overlay video {
+      width: 80%;
+      max-width: 720px;
+      border: 4px solid white;
+      border-radius: 10px;
+    }
+
+    #overlay .close-btn {
+      position: absolute;
+      top: 30px;
+      right: 60px;
+      font-size: 40px;
+      color: white;
+      cursor: pointer;
+    }
+
+	  #followTooltip {
+    position: fixed;
+    z-index: 10000;
+    background: rgba(0, 51, 102, 0.85);
+    color: white;
+    font-size: 14px;
+    text-align: left;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+  
+      .video-caption {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: #000;
+      color: white;
+      font-size: 16px;
+      line-height: 1.3;
+      text-align: center;
+      padding: 4px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+	
+	.quote-box {
+  position: absolute;
+  bottom: 20px;
+  left: 60px;
+  max-width: 500px;
+  color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  text-shadow: 0 0 8px rgba(0,0,0,0.6);
+  z-index: 100;
+}
+.quote-box span {
+  display: block;
+  margin-top: 8px;
+  font-size: 15px;
+  opacity: 0.8;
+}
+.page-title {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 38px;
+  color: #ffffff;
+  font-weight: bold;
+  text-shadow: 0 0 14px rgba(0, 123, 255, 0.7);
+  z-index: 999;
+  font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
+  line-height: 1.2;
+}
+.page-title span {
+  display: block;
+  font-size: 16px;
+  margin-top: 2px;
+  opacity: 0.85;
+  letter-spacing: 0.3px;
+}
+  </style>
+</head>
+<body>
+
+  <video autoplay muted loop id="bgVideo">
+    <source src="bgsetupv2.mp4" type="video/mp4">
+  </video>
+  
+    <div id="header-bar">
+    <button onclick="window.location.href = 'index.html'">ย้อนกลับ</button>
+  </div>
+  
+<div class="page-title">
+  Precision Setup
+  <span>"จุดเริ่มต้นของความแม่นยำ... อยู่ที่การสอบเทียบ"</span>
+</div>
+
+
+
+  <div class="video-button v1"  onclick="if(event.ctrlKey){ahk.zsetup(event);}else{openOverlay('zsetvideo.mp4');}">
+    <img src="zsetupv2.png" alt="Z Test">
+	 <div class="video-caption">สอบเทียบแกน Z<br>Z Calibration</div>
+  </div>
+
+  <div class="video-button v2"  onclick="if(event.ctrlKey){ahk.xysetup(event);}else{openOverlay('xymango-process.mp4');}">
+    <img src="ysetupv2.png" alt="XY Test">
+	<div class="video-caption">สอบเทียบ XY<br>XY Calibration</div>
+  </div>
+
+  <div class="video-button v3"  onclick="if(event.ctrlKey){ahk.toolsetup(event);}else{openOverlay('Yellowsetup.mp4');}">
+    <img src="yellowsetup.png" alt="Sensor">
+	<div class="video-caption">ติดตั้ง Toolsetter<br>Toolsetter Position</div>
+  </div>
+  
+    <div class="video-button v4" onclick="if(event.ctrlKey){ahk.camerasetup(event);}else{openOverlay('camsetall.mp4');}">
+    <img src="camerasetup.png" alt="Sensor">
+	<div class="video-caption">สอบเทียบกล้อง<br>Camera Calibration</div>
+  </div>
+
+  <div class="image-button"  onclick="if(event.ctrlKey){ahk.parameter(event);}else{openOverlay('paramini.mp4');}">
+    <img src="paramini.png" alt="ปุ่มรูปภาพ">
+	<div class="video-caption">ตั้งค่าพารามิเตอร์<br>Parameter Setup</div>
+  </div>
+
+<div id="followTooltip">
+  - คลิกเพื่อดูวีดีโอ<br>
+  &nbsp;&nbsp;&nbsp;(Click to preview video)<br>
+  - 🔒 ต้องกด Ctrl ค้างก่อนคลิกเพื่อยืนยันการสั่งงาน<br>
+  &nbsp;&nbsp;&nbsp;(Hold Ctrl while clicking to confirm command)
+</div>
+
+  <div id="overlay">
+    <video id="instructionVideo" controls></video>
+    <div class="close-btn" onclick="closeOverlay()">×</div>
+  </div>
+<div class="quote-box">
+  <p>
+    ถ้าถามว่าทำไมเราถึงทำงานนี้<br>
+    ผมก็ตอบได้เลยว่า<br>
+    พวกเรานั้นศรัทธาในสิ่งที่พวกเราทำ<br><br>
+    <span>
+      If you ask why we do this,<br>
+      my answer is simple:<br>
+      We believe in what we do.<br>
+      — Steve Jobs
+    </span>
+  </p>
+</div>
+
+
+
+  <script>
+    function openOverlay(videoSrc) {
+      var overlay = document.getElementById('overlay');
+      var video = document.getElementById('instructionVideo');
+      video.pause();
+      video.src = videoSrc;
+      video.load();
+      overlay.style.display = 'flex';
+      video.play();
+    }
+
+    function closeOverlay() {
+      var overlay = document.getElementById('overlay');
+      var video = document.getElementById('instructionVideo');
+      video.pause();
+      overlay.style.display = 'none';
+    }
+
+  const tooltip = document.getElementById('followTooltip');
+  document.addEventListener('mousemove', function(e) {
+    var el = e.target;
+    while (el && el !== document.body) {
+      if (el.className && el.className.indexOf('icon-button') !== -1) {
+        tooltip.style.opacity = '0';
+        return;
+      }
+      el = el.parentNode;
+    }
+    tooltip.style.opacity = '1';
+    tooltip.style.left = (e.pageX + 12) + 'px';
+    tooltip.style.top = (e.pageY + 16) + 'px';
+  });
+  </script>
+
+</body>
+</html>

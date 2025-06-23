@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Surface scan</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #container {
+      position: relative;
+      width: 720px;
+      height: 720px;
+      overflow: hidden;
+    }
+
+    #bgVideo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    .image-button {
+      position: absolute;
+      width: 345px;
+      height: 400px;
+      left: 200px;
+      top: 80px;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+      z-index: 2;
+    }
+
+    .image-button:hover {
+      transform: scale(1.05);
+    }
+
+    .image-button img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .tooltip {
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0.75);
+      color: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      white-space: nowrap;
+      z-index: 99;
+      left: 200px;
+      top: 40px;
+      display: none;
+    }
+
+    .image-button:hover + .tooltip {
+      display: block;
+    }
+
+    #backButton, #configButton {
+      position: absolute;
+      bottom: 12px;
+      z-index: 3;
+      font-size: 20px;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    #backButton { left: 12px; }
+    #configButton {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.75);
+      z-index: 998;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #overlay video {
+      width: 80%;
+      max-width: 720px;
+      border: 4px solid white;
+      border-radius: 10px;
+      background: black;
+    }
+
+    #overlay .close-btn {
+      position: absolute;
+      top: 30px;
+      right: 60px;
+      font-size: 36px;
+      color: white;
+      cursor: pointer;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <video id="bgVideo" autoplay muted loop playsinline>
+      <source src="bgstart.mp4" type="video/mp4">
+    </video>
+
+    <div class="image-button" onclick="if(event.ctrlKey){ahk.smartsurface(event);}else{openOverlay('ssssvideo.mp4');}">
+      <img src="startssscan.png" alt="Smart Surface scan">
+    </div>
+    <div class="tooltip">🔒 ต้องกด Ctrl ค้างก่อนคลิก<br>เพื่อยืนยันการสั่งงาน</div>
+
+    <button id="backButton" onclick="window.location.href='index.html'">ย้อนกลับ</button>
+    <button id="configButton" onclick="openOverlay('video-ex1-surface.mp4')">ตั้งค่าก่อนใช้งาน</button>
+  </div>
+
+  <div id="overlay">
+    <div class="close-btn" onclick="closeOverlay()">×</div>
+    <video id="instructionVideo" controls>
+      <source src="" type="video/mp4">
+    </video>
+  </div>
+
+  <script>
+    function openOverlay(videoSrc) {
+      const overlay = document.getElementById('overlay');
+      const video = document.getElementById('instructionVideo');
+      video.pause();
+      video.src = videoSrc;
+      video.load();
+      overlay.style.display = 'flex';
+      video.play();
+    }
+
+    function closeOverlay() {
+      const overlay = document.getElementById('overlay');
+      const video = document.getElementById('instructionVideo');
+      video.pause();
+      overlay.style.display = 'none';
+    }
+  </script>
+</body>
+</html>
