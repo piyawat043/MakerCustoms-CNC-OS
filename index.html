@@ -10,30 +10,28 @@ html, body {
   width: 100vw; height: 100vh;
   overflow: hidden;
 }
-
 #fixedContainer {
-  width: 1270px;
+  width: 1280px; /* ขนาดดีไซน์เดิม */
   height: 1080px;
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background: transparent; /* หรือเปลี่ยนเป็นสีอื่นได้ */
-  box-shadow: 0 0 60px #000b;
-  overflow: hidden;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%) scale(var(--ui-scale,1));
 }
 
-#bgVideo {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw;
-  height: 100vh; /* หรือ height: 1080px; */
-  object-fit: cover;
-      z-index: -1;
-      opacity: 0.85;
-      pointer-events: none;
-    }
 
+#bgVideo {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  width: 1280px; /* ขนาดดีไซน์เดิม */
+  height: 1080px;
+    object-fit: none; /* รักษาขนาดดั้งเดิม ไม่ยืดหรือครอบตัด */
+    z-index: -1;
+    opacity: 1;
+    pointer-events: none;
+}
+	
     #mainContainer {
       position: relative;
       width: 100%;
@@ -59,7 +57,7 @@ html, body {
       z-index: 2;
     }
     .main { 
-	width: auto; 
+	width: 337.5px; 
 	height: auto; 
   top: 228px;
   left: 110px;
@@ -73,7 +71,7 @@ html, body {
 	}
 	
     .top-right { 
-	width: auto; 
+	width: 253px; 
 	height: auto; 
   top: 336px;
   left: 897px;
@@ -269,12 +267,12 @@ html, body {
   </style>
 </head>
 <body>
-
+  <div id="fixedContainer">
 
 <video id="bgVideo" class="fadein" autoplay muted loop playsinline>
   <source src="imakbg.mp4" type="video/mp4">
 </video>
-  <div id="fixedContainer">
+
 <!-- Title -->
 <div class="page-title fadein">
   iMak
@@ -329,7 +327,7 @@ html, body {
     <span>We are standing on the shoulders of giants.<br>— เซอร์ ไอแซก นิวตัน (Sir Isaac Newton)</span>
   </p>
 </div>
-  </div>
+
 </body>
  <script>
 document.addEventListener('DOMContentLoaded', function() {
