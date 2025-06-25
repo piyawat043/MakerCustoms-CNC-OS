@@ -27,7 +27,7 @@ html, body {
   position: fixed;
   top: 0; left: 0;
   width: 100vw;
-  height: 1080px; /* หรือ height: 1080px; */
+  height: 100vh; /* หรือ height: 1080px; */
   object-fit: cover;
       z-index: -1;
       opacity: 0.85;
@@ -436,7 +436,7 @@ window.onload = function() {
 };
 
 function updateScale() {
-  const baseW = 1280, baseH = 720;
+  const baseW = 1280, baseH = 1080;
   const scale = Math.min(window.innerWidth/baseW, window.innerHeight/baseH);
   document.documentElement.style.setProperty('--ui-scale', scale);
 }
