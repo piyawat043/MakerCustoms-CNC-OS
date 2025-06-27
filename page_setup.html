@@ -3,33 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <title>CNC UI Calibration page</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-html, body {
-  margin: 0; padding: 0;
-  width: 100vw; height: 100vh;
+   body, html {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
-}
-#fixedContainer {
-  width: 1280px; /* ขนาดดีไซน์เดิม */
-  height: 720px;
-  position: absolute;
-  left: 50%; top: 50%;
-  transform: translate(-50%, -50%) scale(var(--ui-scale,1));
-}
-
-
-  #bgVideo {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  object-fit: cover;
-  z-index: -1;
-  opacity: 0.85;
-  pointer-events: none;
-  /* เพิ่มป้องกัน video กระพริบใน iOS Safari */
   background: #000;
 }
+#fixedContainer {
+  width: 1280px;
+  height: 900px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: transparent; /* หรือเปลี่ยนเป็นสีอื่นได้ */
+  box-shadow: 0 0 60px #000b;
+  overflow: hidden;
+}
+
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100vw;
+      min-height: 100vh;
+      z-index: -99;
+      object-fit: cover;
+      opacity: 0.7;
+    }
 
     #header-bar {
       width: 720px;
@@ -73,46 +77,55 @@ html, body {
     }
 
     .v1 {
-      width: 305.5px;
-      height: 361.2px;
-      left: 80px;
-      top: 100px;
+      width: auto;
+      height: 360px;
+      left: 150px;
+      top: 150px;
     }
 
     .v2 {
       width: auto;
       height: 340px;
       left: 500px;
-      top: 120px;
+      top: 150px;
     }
 
     .v3 {
       width: 308.8px;
       height: 359.2px;
-      left: 900.3px;
-      top: 100px;
+      left: 800.3px;
+      top: 150px;
     }
 	    .v4 {
       width: auto;
       height: 200px;
-      left: 450px;
-      top: 480px;
+      left: 560px;
+      top: 600px;
+    }
+
+	.v5 {
+      width: 210px;
+      height: 210px;
+      left: 300px;
+      top: 600px;
     }
 
     .image-button {
       width: 190px;
       height: 210px;
-      left: 820px;
-      top: 470px;
+      left: 860px;
+      top: 600px;
       cursor: pointer;
     }
+	
+
 
     #overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 1280px;
-  height: 720px;
+  height: 900px;
   background: rgba(0, 0, 0, 0.9);
   z-index: 9999;
   justify-content: center;
@@ -204,11 +217,11 @@ html, body {
   </style>
 </head>
 <body>
-
+<div id="fixedContainer">
   <video autoplay muted loop id="bgVideo">
     <source src="bgsetupv2.mp4" type="video/mp4">
   </video>
-  <div id="fixedContainer">
+  
     <div id="header-bar">
     <button onclick="window.location.href = 'index.html'">ย้อนกลับ</button>
   </div>
@@ -221,14 +234,10 @@ html, body {
 
 
   <div class="video-button v1"  onclick="if(event.ctrlKey){ahk.zsetup(event);}else{openOverlay('zsetvideo.mp4');}">
-    <img src="zsetupv2.png" alt="Z Test">
-	 <div class="video-caption">สอบเทียบแกน Z<br>Z Calibration</div>
+    <img src="zxysetupall22.png" alt="Z Test">
+	 <div class="video-caption">สอบเทียบแกน ZXY<br>ZXY Calibration</div>
   </div>
 
-  <div class="video-button v2"  onclick="if(event.ctrlKey){ahk.xysetup(event);}else{openOverlay('xymango-process.mp4');}">
-    <img src="ysetupv2.png" alt="XY Test">
-	<div class="video-caption">สอบเทียบ XY<br>XY Calibration</div>
-  </div>
 
   <div class="video-button v3"  onclick="if(event.ctrlKey){ahk.toolsetup(event);}else{openOverlay('Yellowsetup.mp4');}">
     <img src="yellowsetup.png" alt="Sensor">
@@ -243,6 +252,11 @@ html, body {
   <div class="image-button"  onclick="if(event.ctrlKey){ahk.parameter(event);}else{openOverlay('paramini.mp4');}">
     <img src="parameter.png" alt="ปุ่มรูปภาพ">
 	<div class="video-caption">ตั้งค่าพารามิเตอร์<br>Parameter Setup</div>
+  </div>
+  
+    <div class="video-button v5"  onclick="if(event.ctrlKey){ahk.gamepad(event);}else{openOverlay('joy-probe.mp4');}">
+    <img src="reconnectjoy.png" alt="ปุ่มรูปภาพ">
+	<div class="video-caption">เชื่อต่อจอยสติก<br>Reconnect Gamepad</div>
   </div>
 
 <div id="followTooltip">
@@ -290,42 +304,20 @@ html, body {
       overlay.style.display = 'none';
     }
 
-const tooltip = document.getElementById('followTooltip');
-const container = document.getElementById('fixedContainer');
-
-document.addEventListener('mousemove', function(e) {
-  var el = e.target;
-  while (el && el !== document.body) {
-    if (el.className && el.className.indexOf('icon-button') !== -1) {
-      tooltip.style.opacity = '0';
-      return;
+  const tooltip = document.getElementById('followTooltip');
+  document.addEventListener('mousemove', function(e) {
+    var el = e.target;
+    while (el && el !== document.body) {
+      if (el.className && el.className.indexOf('icon-button') !== -1) {
+        tooltip.style.opacity = '0';
+        return;
+      }
+      el = el.parentNode;
     }
-    el = el.parentNode;
-  }
-  // หาค่า scale
-  const scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--ui-scale')) || 1;
-  // หา bounding rect ของ container (บนจอจริง)
-  const rect = container.getBoundingClientRect();
-  // คำนวณตำแหน่งภายใน container (แกน X,Y)
-  const offsetX = (e.clientX - rect.left) / scale;
-  const offsetY = (e.clientY - rect.top) / scale;
-
-  // ตำแหน่ง tooltip = ตำแหน่ง pointer ใน container + offset
-  tooltip.style.left = (rect.left + offsetX * scale + 12) + 'px';
-  tooltip.style.top  = (rect.top + offsetY * scale + 16) + 'px';
-  tooltip.style.opacity = '1';
-});
-
-
-function updateScale() {
-  const baseW = 1280, baseH = 720;
-  const scale = Math.min(window.innerWidth/baseW, window.innerHeight/baseH);
-  document.documentElement.style.setProperty('--ui-scale', scale);
-}
-window.addEventListener('resize', updateScale);
-window.addEventListener('orientationchange', updateScale);
-updateScale();
-
+    tooltip.style.opacity = '1';
+    tooltip.style.left = (e.pageX + 12) + 'px';
+    tooltip.style.top = (e.pageY + 16) + 'px';
+  });
   </script>
 
 </body>

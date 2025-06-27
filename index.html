@@ -3,34 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <title>CNC UI main</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=1270, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
-html, body {
-  margin: 0; padding: 0;
-  width: 100vw; height: 100vh;
+   body, html {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
+  background: #000;
 }
+
 #fixedContainer {
-  width: 1280px; /* ขนาดดีไซน์เดิม */
+  width: 1270px;
   height: 1080px;
   position: absolute;
-  left: 50%; top: 50%;
-  transform: translate(-50%, -50%) scale(var(--ui-scale,1));
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: transparent; /* หรือเปลี่ยนเป็นสีอื่นได้ */
+  box-shadow: 0 0 60px #000b;
+  overflow: hidden;
 }
-
 
 #bgVideo {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  width: 1280px; /* ขนาดดีไซน์เดิม */
-  height: 1080px;
-    object-fit: none; /* รักษาขนาดดั้งเดิม ไม่ยืดหรือครอบตัด */
-    z-index: -1;
-    opacity: 1;
-    pointer-events: none;
-}
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 1080px; /* หรือ height: 1080px; */
+  object-fit: cover;
+      z-index: -1;
+      opacity: 0.85;
+      pointer-events: none;
+    }
 	
     #mainContainer {
       position: relative;
@@ -56,8 +61,9 @@ html, body {
       pointer-events: none;
       z-index: 2;
     }
+	
     .main { 
-	width: 337.5px; 
+	width: auto; 
 	height: auto; 
   top: 228px;
   left: 110px;
@@ -71,7 +77,7 @@ html, body {
 	}
 	
     .top-right { 
-	width: 253px; 
+	width: auto; 
 	height: auto; 
   top: 336px;
   left: 897px;
@@ -84,6 +90,9 @@ html, body {
   left: 527px;
 	}
 	
+	
+	
+  
 	
 .videoBox {
   position: absolute;
@@ -185,11 +194,11 @@ html, body {
 	.overlay-text.bottom-left {
   position: absolute;
   left: 40px;
-  bottom: 30px;
+  bottom: 90px;
   color: #ffffff;
   text-align: left;
   font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
-  font-size: 20px;
+  font-size: 16px;
   font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
   text-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
   z-index: 200;
@@ -267,11 +276,11 @@ html, body {
   </style>
 </head>
 <body>
-  <div id="fixedContainer">
-
+<div id="fixedContainer">
 <video id="bgVideo" class="fadein" autoplay muted loop playsinline>
   <source src="imakbg.mp4" type="video/mp4">
 </video>
+  
 
 <!-- Title -->
 <div class="page-title fadein">
@@ -328,8 +337,42 @@ html, body {
   </p>
 </div>
 
+<!-- ปุ่มพิเศษสุดยอด -->
+<button id="giantBtn" style="
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  padding: 14px 20px;
+  font-size: 15px;
+  background: linear-gradient(135deg, #232526, #414345);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  cursor: pointer;
+  z-index: 9999;
+  width: max-content;
+  max-width: 90vw;
+  text-align: left;
+  line-height: 1.5;
+">
+  🧠 คลิกที่นี่เพื่อยืนบนไหล่ของยักษ์<br>
+  <span style="font-size: 13px; font-weight: normal; opacity: 0.85;">
+    Click here to stand on the shoulders of giants
+  </span>
+</button>
+
+
+
+
+  </div>
 </body>
  <script>
+document.getElementById("giantBtn").addEventListener("click", function() {
+  window.open("https://www.youtube.com/playlist?list=YOUR_PLAYLIST_ID", "_blank");
+});
+ 
 document.addEventListener('DOMContentLoaded', function() {
   // Ctrl+Click ยืนยัน toolsetterBox
   var toolsetterBox = document.getElementById('toolsetterBox');
@@ -432,15 +475,6 @@ window.onload = function() {
     })(boxes[i], i);
   }
 };
-
-function updateScale() {
-  const baseW = 1280, baseH = 1080;
-  const scale = Math.min(window.innerWidth/baseW, window.innerHeight/baseH);
-  document.documentElement.style.setProperty('--ui-scale', scale);
-}
-window.addEventListener('resize', updateScale);
-window.addEventListener('orientationchange', updateScale);
-updateScale();
 
 
 
