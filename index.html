@@ -3,48 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <title>CNC UI main</title>
-<meta name="viewport" content="width=1270, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-   body, html {
-  margin: 0;
-  padding: 0;
-  width: 100vw;
-  height: 100vh;
+html, body {
+  margin: 0; padding: 0;
+  width: 100vw; height: 100vh;
   overflow: hidden;
-  background: #000;
 }
 
-#fixedContainer {
-  width: 1270px;
-  height: 1080px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background: transparent; /* หรือเปลี่ยนเป็นสีอื่นได้ */
-  box-shadow: 0 0 60px #000b;
-  overflow: hidden;
-}
+
 
 #bgVideo {
   position: fixed;
-  top: 0; left: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 100vw;
-  height: 1080px; /* หรือ height: 1080px; */
-  object-fit: cover;
-      z-index: -1;
-      opacity: 0.85;
-      pointer-events: none;
-    }
-	
-    #mainContainer {
-      position: relative;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+  height: 100vh;
+  object-fit: none;
+  z-index: -1;
+  opacity: 1;
+  pointer-events: none;
+}
+
+#fixedContainer {
+  width: 1280px;
+  height: 1080px;
+  position: absolute;
+  left: 0; top: 0;
+  transform: translate(-50%, -50%) scale(var(--ui-scale,1));
+}
+
+#mainContainer {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.main {
+  position: absolute;
+  width: 337.5px;
+  height: auto;
+  top: 228px;
+  left: 110px;
+}
+
+.top-left {
+  position: absolute;
+  width: 200px;
+  height: auto;
+  top: 30px;
+  left: 581px;
+}
+
+.top-right {
+  position: absolute;
+  width: 253px;
+  height: auto;
+  top: 336px;
+  left: 897px;
+}
+
+.bottom-right {
+  position: absolute;
+  width: auto;
+  height: 250px;
+  top: 749px;
+  left: 527px;
+}
+
 	
 	    .label {
       position: absolute;
@@ -62,34 +92,7 @@
       z-index: 2;
     }
 	
-    .main { 
-	width: auto; 
-	height: auto; 
-  top: 228px;
-  left: 110px;
-	}
-	
-    .top-left { 
-	width: 200px; 
-	height: auto; 
-  top: 30px;
-  left: 581px;
-	}
-	
-    .top-right { 
-	width: auto; 
-	height: auto; 
-  top: 336px;
-  left: 897px;
-	}
-	
-    .bottom-right { 
-	width: auto; 
-	height: 250px; 
-  top: 749px;
-  left: 527px;
-	}
-	
+  
 	
 	
   
@@ -276,12 +279,12 @@
   </style>
 </head>
 <body>
-<div id="fixedContainer">
+
 <video id="bgVideo" class="fadein" autoplay muted loop playsinline>
   <source src="imakbg.mp4" type="video/mp4">
 </video>
-  
-
+ 
+ <div id="fixedContainer">
 <!-- Title -->
 <div class="page-title fadein">
   iMak
@@ -340,10 +343,10 @@
 <!-- ปุ่มพิเศษสุดยอด -->
 <button id="giantBtn" style="
   position: fixed;
-  bottom: 24px;
-  left: 24px;
+  bottom: 40px;
+  Right: 24px;
   padding: 14px 20px;
-  font-size: 15px;
+  font-size: 18px;
   background: linear-gradient(135deg, #232526, #414345);
   color: white;
   font-weight: bold;
@@ -357,39 +360,33 @@
   text-align: left;
   line-height: 1.5;
 ">
-  🧠 คลิกที่นี่เพื่อยืนบนไหล่ของยักษ์<br>
+  🧠 คลิกที่นี่เพื่อยืนบนไหล่ของผม<br>
   <span style="font-size: 13px; font-weight: normal; opacity: 0.85;">
-    Click here to stand on the shoulders of giants
+    Click here to stand on the shoulders of Piyawat
   </span>
 </button>
 
+</div>
 
-
-
-  </div>
 </body>
  <script>
+ 
 document.getElementById("giantBtn").addEventListener("click", function() {
   window.open("https://www.youtube.com/playlist?list=YOUR_PLAYLIST_ID", "_blank");
 });
  
+ 
 document.addEventListener('DOMContentLoaded', function() {
   // Ctrl+Click ยืนยัน toolsetterBox
-  var toolsetterBox = document.getElementById('toolsetterBox');
-  if (toolsetterBox) {
+var toolsetterBox = document.getElementById('toolsetterBox');
     toolsetterBox.addEventListener('click', function(event) {
       if (event.ctrlKey) {
-        if (typeof ahk !== 'undefined' && ahk.autotoolzero) {
-          ahk.autotoolzero(event);
-        }
+        ahk.autotoolzero(event);
       } else {
-        toolsetterBox.classList.add('show-tooltip');
-        setTimeout(function(){ toolsetterBox.classList.remove('show-tooltip'); }, 1400);
+        console.log("ต้องกด Ctrl+Click เท่านั้น");
         event.preventDefault();
       }
     });
-  }
-
   // ฟังก์ชันป้องกัน InvalidStateError
   function safeVideoPlay(vid) {
     try {
@@ -475,6 +472,32 @@ window.onload = function() {
     })(boxes[i], i);
   }
 };
+
+window.onload = function() {
+  var bg = document.getElementById('bgVideo');
+  setTimeout(function() { bg.classList.add('show'); }, 200);
+
+  var title = document.querySelector('.page-title');
+  setTimeout(function() { title.classList.add('show'); }, 1200);
+
+  var boxes = document.querySelectorAll('.videoBox.fadein');
+  for (var i = 0; i < boxes.length; i++) {
+    (function(box, idx) {
+      setTimeout(function() {
+        box.classList.add('show');
+      }, 1200 + idx * 350);
+    })(boxes[i], i);
+  }
+};
+
+function updateScale() {
+  const baseW = 1280, baseH = 1080;
+  const scale = Math.min(window.innerWidth/baseW, window.innerHeight/baseH);
+  document.documentElement.style.setProperty('--ui-scale', scale);
+}
+window.addEventListener('resize', updateScale);
+window.addEventListener('orientationchange', updateScale);
+updateScale();
 
 
 
