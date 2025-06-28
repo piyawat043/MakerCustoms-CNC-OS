@@ -11,6 +11,13 @@ html, body {
   overflow: hidden;
 }
 
+#fixedContainer {
+  width: 1280px;
+  height: 1080px;
+  position: absolute;
+  left: 0; top: 0;
+  transform: translate(-50%, -50%) scale(var(--ui-scale,1));
+}
 
 
 #bgVideo {
@@ -26,13 +33,6 @@ html, body {
   pointer-events: none;
 }
 
-#fixedContainer {
-  width: 1280px;
-  height: 1080px;
-  position: absolute;
-  left: 0; top: 0;
-  transform: translate(-50%, -50%) scale(var(--ui-scale,1));
-}
 
 #mainContainer {
   position: relative;
@@ -279,12 +279,12 @@ html, body {
   </style>
 </head>
 <body>
-
+ <div id="fixedContainer">
 <video id="bgVideo" class="fadein" autoplay muted loop playsinline>
   <source src="imakbg.mp4" type="video/mp4">
 </video>
  
- <div id="fixedContainer">
+
 <!-- Title -->
 <div class="page-title fadein">
   iMak
