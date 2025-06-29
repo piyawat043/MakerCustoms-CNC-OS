@@ -269,6 +269,35 @@ html, body {
   pointer-events: auto;
 }
 
+.step-tooltip {
+  position: absolute;
+  background: rgba(30,30,30,0.97);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 26px;
+  box-shadow: 0 4px 16px #000b;
+  white-space: pre-line;
+  z-index: 8888;
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity .2s;
+  max-width: 500px;
+}
+.step-tooltip.active {
+  opacity: 1;
+}
+
+.popup-center {
+  display: none;
+  position: fixed;
+  left: 0; top: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.65);
+  z-index: 99999;
+  justify-content: center;
+  align-items: center;
+}
 
   </style>
 </head>
@@ -284,6 +313,8 @@ html, body {
     "ผู้ช่วยของการสร้างสรรค์"</span>
   </div>
   <div id="mainContainer">
+  
+
     <div class="videoBox top-left fadein" tabindex="0" id="toolsetterBox">
       <img src="atzv3.png" class="preview" alt="One-click Tool Measuring">
       <video src="toolsetter2.mp4" muted loop playsinline></video>
@@ -291,6 +322,17 @@ html, body {
       <div class="tooltip">🔒 ต้องกด Ctrl ค้างก่อนคลิกเพื่อยืนยันการสั่งงาน</div>
       <div class="hover-preview"><video src="toolsetter2.mp4" muted loop playsinline></video></div>
     </div>
+	
+<div id="videoPopup3" class="popup-center">
+  <div style="background: #111; border-radius: 16px; padding: 24px; box-shadow: 0 2px 32px #000d; position: relative;">
+    <button onclick="hidePopup3()" ...>✖️</button>
+    <video id="myVideo" width="900" controls>
+      <source src="onetool.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
+
+	
     <div class="videoBox main fadein" tabindex="0" onclick="location.href='page_3dprobe.html'">
       <img src="probezerov3.png" class="preview" alt="Semi-Auto Probe Interface">
       <video src="newxyztoolv2.mp4" muted loop playsinline></video>
@@ -322,19 +364,22 @@ html, body {
       <span>We are standing on the shoulders of giants.<br>— เซอร์ ไอแซก นิวตัน (Sir Isaac Newton)</span>
     </p>
   </div>
-  <button id="giantBtn" style="position: fixed; bottom: 40px; right: 24px; padding: 14px 20px; font-size: 18px; background: linear-gradient(135deg, #232526, #414345); color: white; font-weight: bold; border: none; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.25); cursor: pointer; z-index: 9999; width: max-content; max-width: 90vw; text-align: left; line-height: 1.5;">
-    🧠 คลิกที่นี่เพื่อยืนบนไหล่ของผม<br>
-    <span style="font-size: 13px; font-weight: normal; opacity: 0.85;">
-      Click here to stand on the shoulders of Piyawat
-    </span>
-  </button>
+<a
+  href="https://piyawat043.github.io/piyawatzone/"
+  style="position: fixed; bottom: 40px; right: 24px; display: inline-block; padding: 14px 20px; font-size: 18px; background: linear-gradient(135deg, #232526, #414345); color: white; font-weight: bold; border: none; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.25); cursor: pointer; z-index: 9999; width: max-content; max-width: 90vw; text-align: left; line-height: 1.5; text-decoration: none;">
+  🧠 คลิกที่นี่เพื่อยืนบนไหล่ของผม<br>
+  <span style="font-size: 13px; font-weight: normal; opacity: 0.85;">
+    Click here to stand on the shoulders of Piyawat
+  </span>
+</a>
+
+  
+
+
+
 </div>
 </body>
 <script>
-document.getElementById("giantBtn").addEventListener("click", function() {
-  window.open("https://www.youtube.com/playlist?list=YOUR_PLAYLIST_ID", "_blank");
-});
- 
  
 document.addEventListener('DOMContentLoaded', function() {
   // Ctrl+Click ยืนยัน toolsetterBox
@@ -461,6 +506,84 @@ function updateScale() {
 window.addEventListener('resize', updateScale);
 window.addEventListener('orientationchange', updateScale);
 updateScale();
+
+// อาจใช้แค่ array 2 ตัวแปร (index ตรงกัน)
+const elementSelectors = [
+  "#toolsetterBox",
+  ".videoBox.main",
+  ".videoBox.top-right",
+  ".videoBox.bottom-right",
+  "#giantBtn"
+];
+
+const tooltipTexts = [
+  "วัดอัตโนมัติ แค่กด Ctrl แล้วคลิก\n(Auto-measure. Ctrl + click.)",
+  "ทุกการเริ่มต้น... ปุ่มเดียว\n(Every beginning—one button.)"
+,
+  "แม่นหรือไม่ อยู่ที่สอบเทียบ\n(Precision begins with calibration.)"
+,
+  "ผิวโค้ง? แค่ทางผ่าน ไม่ใช่อุปสรรค\n(Curves—just another path.)"
+,
+  "“อยากไปเร็ว… ยืนบนไหล่ผม แค่คลิก”\n(Want to leap? Stand on my shoulders—click.)"
+];
+
+let tooltipDiv = null;
+let stepIndex = 0;
+
+function showStepTooltip(target, text) {
+  if (!tooltipDiv) {
+    tooltipDiv = document.createElement('div');
+    tooltipDiv.className = "step-tooltip";
+    document.body.appendChild(tooltipDiv);
+  }
+
+  // แยกบรรทัดและจัด format สองภาษา
+  const lines = text.split('\n');
+  let line1 = lines[0] || "";
+  let line2 = lines[1] || "";
+  let line3 = lines[2] || "";
+  let line4 = lines[3] || "";
+
+  // ถ้ามี 4 บรรทัด ให้แสดงคู่ไทย-อังกฤษ
+  if (lines.length >= 4) {
+    tooltipDiv.innerText = line1 + " " + line2 + "\n" + line3 + " " + line4;
+  } else {
+    // ถ้าเป็นข้อความทั่วไป ให้แสดงตามปกติ
+    tooltipDiv.innerText = text;
+  }
+
+  tooltipDiv.classList.add("active");
+  setTimeout(() => {
+    const rect = target.getBoundingClientRect();
+    const ttWidth = tooltipDiv.offsetWidth;
+    const ttHeight = tooltipDiv.offsetHeight;
+    const left = rect.left + rect.width/2 - ttWidth/2;
+    const top  = rect.top  + rect.height/2 - ttHeight/2;
+    tooltipDiv.style.left = left + "px";
+    tooltipDiv.style.top  = top  + "px";
+  }, 10);
+}
+
+function hideStepTooltip() {
+  if (tooltipDiv) tooltipDiv.classList.remove("active");
+}
+function showNextStep() {
+  hideStepTooltip();
+  const selector = elementSelectors[stepIndex % elementSelectors.length];
+  const text = tooltipTexts[stepIndex % tooltipTexts.length];
+  const target = document.querySelector(selector);
+  if (target) {
+    showStepTooltip(target, text);
+    setTimeout(() => {
+      stepIndex++;
+      showNextStep();
+    }, 5000);
+  }
+}
+document.addEventListener("DOMContentLoaded", showNextStep);
+
+
+
 </script>
 </body>
 </html>
