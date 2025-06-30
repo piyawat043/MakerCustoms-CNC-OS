@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>CNC UI - Main (Mobile)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* --- General Styles --- */
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100vh;
+      background: #10141a;
+      font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 1;
+    }
+
+    /* --- Main Container --- */
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      gap: 25px; /* ระยะห่างระหว่างปุ่มเมนู */
+    }
+
+    /* --- Header --- */
+    .page-title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      text-shadow: 0 0 14px rgba(0, 123, 255, 0.7);
+      margin: 20px 0;
+      line-height: 1.3;
+    }
+    .page-title span {
+      display: block;
+      font-size: 15px;
+      margin-top: 5px;
+      opacity: 0.85;
+    }
+
+    /* --- Menu Buttons --- */
+    .menu-button {
+      position: relative;
+      width: 90vw;
+      max-width: 450px;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+      transition: transform 0.2s ease;
+      background: rgba(0,0,0,0.1);
+    }
+    .menu-button:active {
+      transform: scale(0.96);
+    }
+    .menu-button .preview {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .menu-button .label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      color: white;
+      text-shadow: 0 0 5px black;
+      font-size: 16px;
+      line-height: 1.4;
+      padding: 12px 8px;
+      background: rgba(0,0,0,0.7);
+      text-align: center;
+    }
+
+    /* --- Footer Elements --- */
+    .quote-text {
+      text-align: center;
+      padding: 20px;
+      margin-top: 20px;
+      max-width: 90vw;
+      line-height: 1.6;
+      font-size: 16px;
+      text-shadow: 0 0 8px rgba(0,0,0,0.7);
+    }
+    .quote-text span {
+      display: block;
+      font-size: 14px;
+      opacity: 0.85;
+      margin-top: 8px;
+    }
+
+    .external-link {
+      display: inline-block;
+      padding: 12px 20px;
+      margin-top: 15px;
+      font-size: 16px;
+      background: linear-gradient(135deg, #232526, #414345);
+      color: white;
+      font-weight: bold;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+      text-decoration: none;
+      text-align: center;
+    }
+    .external-link span {
+      font-size: 13px;
+      font-weight: normal;
+      opacity: 0.85;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <video id="bgVideo" autoplay muted loop playsinline>
+    <source src="imakbg.mp4" type="video/mp4">
+  </video>
+
+  <div class="main-container">
+
+    <div class="page-title">
+      iMak
+      <span>“The Creative Human’s Assistant”<br>"ผู้ช่วยของการสร้างสรรค์"</span>
+    </div>
+
+    <div class="menu-button" onclick="location.href='mobile_page_3dprobe.html'">
+      <img src="probezerov3.png" class="preview" alt="Semi-Auto Probe Interface">
+      <div class="label">เข้าหน้าใช้งานหัววัดกึ่งอัตโนมัติ<br>Semi-Auto Probe Interface</div>
+    </div>
+
+    <div class="menu-button" onclick="location.href='mobile_page_setup.html'">
+      <img src="setupcncv2.png" class="preview" alt="Semi-Auto Calibration">
+      <div class="label">สอบเทียบกึ่งอัตโนมัติ<br>Semi-Auto Calibration</div>
+    </div>
+    
+    <div class="menu-button" onclick="location.href='mobile_page_surface.html'">
+      <img src="sssv22.png" class="preview" alt="One-click Curved Engraving">
+      <div class="label">แกะสลักผิวโค้งปุ่มเดียว<br>One-click Curved Engraving</div>
+    </div>
+
+    <div class="menu-button" onclick="ahk.autotoolzero(event);"> <img src="atzv3.png" class="preview" alt="One-click Tool Measuring">
+      <div class="label">วัดเครื่องมือด้วยปุ่มเดียว<br>One-click Tool Measuring</div>
+    </div>
+
+    <div class="quote-text">
+      เรายืนอยู่บนไหล่ของยักษ์<br>
+      <span>We are standing on the shoulders of giants.<br>— เซอร์ ไอแซก นิวตัน (Sir Isaac Newton)</span>
+    </div>
+    
+    <a href="https://piyawat043.github.io/piyawatzone/" class="external-link">
+      🧠 คลิกที่นี่เพื่อยืนบนไหล่ของผม<br>
+      <span>Click here to stand on my shoulders</span>
+    </a>
+
+  </div>
+
+  <script>
+    // ไม่จำเป็นต้องใช้ JavaScript ที่ซับซ้อนสำหรับเวอร์ชันมือถือ
+    // การทำงานหลักจะอยู่ที่ onclick ใน HTML element โดยตรง
+    document.addEventListener('DOMContentLoaded', function() {
+      // สามารถเพิ่มโค้ดสำหรับ Mobile-specific ได้ที่นี่ หากจำเป็น
+      console.log("Mobile Index page loaded.");
+    });
+  </script>
+
+</body>
+</html>
