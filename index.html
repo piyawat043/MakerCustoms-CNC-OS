@@ -1,44 +1,115 @@
+แน่นอนครับ ผมได้ปรับปรุงไฟล์ `intro_index.html` ของคุณเพื่อเพิ่มหน้าต่างเลือกเวอร์ชันระหว่าง "iMak PC" และ "iMak Phone" ตามที่คุณต้องการ โดยไม่มีการแก้ไขโค้ดเดิมของเวอร์ชัน PC แต่อย่างใด
+
+**การทำงาน:**
+
+1.  เมื่อเปิดไฟล์นี้ขึ้นมา ผู้ใช้จะพบกับหน้าจอแนะนำที่มี 2 ปุ่มให้เลือก
+2.  **หากคลิก "iMak PC"**: หน้าจอแนะนำจะหายไป และหน้าเว็บเวอร์ชัน PC ที่คุณสร้างไว้เดิมจะปรากฏขึ้นและทำงานได้ตามปกติ
+3.  **หากคลิก "iMak Phone"**: เว็บจะทำการเปลี่ยนหน้า (redirect) ไปยังไฟล์ `mobile_index.html`
+
+คุณสามารถคัดลอกโค้ดทั้งหมดด้านล่างนี้ไปวางทับไฟล์ `intro_index.html` เดิมของคุณได้เลย
+
+-----
+
+### **`intro_index.html` (ฉบับปรับปรุงพร้อมหน้าจอเลือก)**
+
+```html
 <!DOCTYPE html>
 <html lang="th">
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta charset="UTF-8">
   <title>CNC UI main</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+/* --- Intro Screen Styles (Added) --- */
+#intro-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #10141a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100000;
+  color: white;
+  font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
+  text-align: center;
+}
+#intro-screen h1 {
+  font-size: 48px;
+  font-weight: bold;
+  text-shadow: 0 0 14px rgba(0, 123, 255, 0.7);
+  margin-bottom: 10px;
+}
+#intro-screen p {
+  font-size: 18px;
+  opacity: 0.85;
+  margin-bottom: 40px;
+}
+.choice-button-container {
+  display: flex;
+  gap: 20px;
+}
+.choice-button {
+  padding: 15px 30px;
+  font-size: 20px;
+  color: white;
+  background: linear-gradient(135deg, #232526, #414345);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+.choice-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 123, 255, 0.3);
+}
+
+/* --- Original PC Styles --- */
 html, body {
   margin: 0; padding: 0;
   width: 100vw; height: 100vh;
   overflow: hidden;
-  background: #10141a;
 }
 
 #fixedContainer {
+  /* Initially hidden */
+  display: none; 
   width: 1280px;
   height: 1080px;
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%) scale(1); /* scale set by JS */
+  transform: translate(-50%, -50%);
   background: transparent;
   box-shadow: 0 0 60px #000b;
   overflow: hidden;
-  will-change: transform;
-  /* Optional: for pixel sharpness on canvas-style UI */
-  image-rendering: pixelated;
 }
 
-/* bgVideo stays at size 1280x1080 and gets scaled with container */
-#bgVideo {
-  position: absolute;
-  top: 0; left: 0;
-  width: 1280px; height: 1080px;
-  z-index: -99;
-  object-fit: cover;
-  opacity: 1;
-}
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+  width: 1280px; /* ขนาดดีไซน์เดิม */
+  height: 1080px;
+      z-index: -99;
+      object-fit: cover;
+      opacity: 1;
+    }
 
-/* เหลือโค้ด layout เดิมเหมือนที่ส่งมา! */
-#mainContainer { position: relative; width: 100%; }
+
+#mainContainer {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
 .main {
   position: absolute;
@@ -72,6 +143,7 @@ html, body {
   left: 527px;
 }
 
+	
 	    .label {
       position: absolute;
       bottom: 8px;
@@ -87,11 +159,6 @@ html, body {
       pointer-events: none;
       z-index: 2;
     }
-	
-  
-	
-	
-  
 	
 .videoBox {
   position: absolute;
@@ -198,7 +265,6 @@ html, body {
   text-align: left;
   font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
   font-size: 16px;
-  font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
   text-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
   z-index: 200;
   max-width: 500px;
@@ -278,7 +344,7 @@ html, body {
   font-size: 26px;
   box-shadow: 0 4px 16px #000b;
   white-space: pre-line;
-  z-index: 8888;
+  z-index: 10001;
   pointer-events: none;
   opacity: 0.6;
   transition: opacity .2s;
@@ -287,34 +353,30 @@ html, body {
 .step-tooltip.active {
   opacity: 1;
 }
-
-.popup-center {
-  display: none;
-  position: fixed;
-  left: 0; top: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.65);
-  z-index: 99999;
-  justify-content: center;
-  align-items: center;
-}
-
   </style>
 </head>
 <body>
+
+<div id="intro-screen">
+  <h1>Welcome to iMak</h1>
+  <p>Please select your version</p>
+  <div class="choice-button-container">
+    <button id="pc-button" class="choice-button">iMak PC</button>
+    <button id="phone-button" class="choice-button">iMak Phone</button>
+  </div>
+</div>
+
 <div id="fixedContainer">
-  <!-- ใส่เนื้อหาเดิมตรงนี้ -->
   <video id="bgVideo" class="fadein" autoplay muted loop playsinline>
     <source src="imakbg.mp4" type="video/mp4">
   </video>
+  
   <div class="page-title fadein">
     iMak
-    <span>“The Creative Human’s Assistant”<br>
-    "ผู้ช่วยของการสร้างสรรค์"</span>
+    <span>“The Creative Human’s Assistant”<br>"ผู้ช่วยของการสร้างสรรค์"</span>
   </div>
-  <div id="mainContainer">
-  
 
+  <div id="mainContainer">
     <div class="videoBox top-left fadein" tabindex="0" id="toolsetterBox">
       <img src="atzv3.png" class="preview" alt="One-click Tool Measuring">
       <video src="toolsetter2.mp4" muted loop playsinline></video>
@@ -322,29 +384,21 @@ html, body {
       <div class="tooltip">🔒 ต้องกด Ctrl ค้างก่อนคลิกเพื่อยืนยันการสั่งงาน</div>
       <div class="hover-preview"><video src="toolsetter2.mp4" muted loop playsinline></video></div>
     </div>
-	
-<div id="videoPopup3" class="popup-center">
-  <div style="background: #111; border-radius: 16px; padding: 24px; box-shadow: 0 2px 32px #000d; position: relative;">
-    <button onclick="hidePopup3()" ...>✖️</button>
-    <video id="myVideo" width="900" controls>
-      <source src="onetool.mp4" type="video/mp4">
-    </video>
-  </div>
-</div>
-
-	
+    
     <div class="videoBox main fadein" tabindex="0" onclick="location.href='page_3dprobe.html'">
       <img src="probezerov3.png" class="preview" alt="Semi-Auto Probe Interface">
       <video src="newxyztoolv2.mp4" muted loop playsinline></video>
       <div class="label">เข้าหน้าใช้งานหัววัดกึ่งอัตโนมัติ<br>Semi-Auto Probe Interface</div>
       <div class="hover-preview"><video src="newxyztoolv2.mp4" muted loop playsinline></video></div>
     </div>
+    
     <div class="videoBox top-right fadein" tabindex="0" onclick="location.href='page_setup.html'">
       <img src="setupcncv2.png" class="preview" alt="Semi-Auto Calibration">
       <video src="zsetvideo.mp4" muted loop playsinline></video>
       <div class="label">สอบเทียบกึ่งอัตโนมัติ<br>Semi-Auto Calibration</div>
       <div class="hover-preview"><video src="zsetvideo.mp4" muted loop playsinline></video></div>
     </div>
+    
     <div class="videoBox bottom-right fadein" tabindex="0" onclick="location.href='page_surface.html'">
       <img src="sssv22.png" class="preview" alt="One-click Curved Engraving">
       <video src="ssssvideo.mp4" muted loop playsinline></video>
@@ -352,47 +406,67 @@ html, body {
       <div class="hover-preview"><video src="ssssvideo.mp4" muted loop playsinline></video></div>
     </div>
   </div>
+
   <div id="overlay">
     <div id="overlayContent">
       <button id="closeOverlay" onclick="closeOverlay()">×</button>
       <video id="instructionVideo" src="mainvdo.mp4" controls></video>
     </div>
   </div>
+  
   <div class="overlay-text bottom-left">
     <p>
       เรายืนอยู่บนไหล่ของยักษ์<br>
       <span>We are standing on the shoulders of giants.<br>— เซอร์ ไอแซก นิวตัน (Sir Isaac Newton)</span>
     </p>
   </div>
-<a
-  href="https://piyawat043.github.io/piyawatzone/"
-  style="position: fixed; bottom: 40px; right: 24px; display: inline-block; padding: 14px 20px; font-size: 18px; background: linear-gradient(135deg, #232526, #414345); color: white; font-weight: bold; border: none; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.25); cursor: pointer; z-index: 9999; width: max-content; max-width: 90vw; text-align: left; line-height: 1.5; text-decoration: none;">
-  🧠 คลิกที่นี่เพื่อยืนบนไหล่ของผม<br>
-  <span style="font-size: 13px; font-weight: normal; opacity: 0.85;">
-    Click here to stand on the shoulders of Piyawat
-  </span>
-</a>
 
-  
-
-
-
+  <button id="giantBtn" onclick="ahk.piyawatzone(event)" style="position: fixed; bottom: 40px; right: 24px; padding: 14px 20px; font-size: 18px; background: linear-gradient(135deg, #232526, #414345); color: white; font-weight: bold; border: none; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.25); cursor: pointer; z-index: 9999; width: max-content; max-width: 90vw; text-align: left; line-height: 1.5;">
+    🧠 คลิกที่นี่เพื่อยืนบนไหล่ของผม<br>
+    <span style="font-size: 13px; font-weight: normal; opacity: 0.85;">
+      Click here to stand on the shoulders of Piyawat
+    </span>
+  </button>
 </div>
+
 </body>
 <script>
- 
+// --- Intro Screen Script (Added) ---
 document.addEventListener('DOMContentLoaded', function() {
-  // Ctrl+Click ยืนยัน toolsetterBox
-var toolsetterBox = document.getElementById('toolsetterBox');
-    toolsetterBox.addEventListener('click', function(event) {
-      if (event.ctrlKey) {
-        ahk.autotoolzero(event);
-      } else {
-        console.log("ต้องกด Ctrl+Click เท่านั้น");
-        event.preventDefault();
-      }
-    });
-  // ฟังก์ชันป้องกัน InvalidStateError
+  const introScreen = document.getElementById('intro-screen');
+  const pcContainer = document.getElementById('fixedContainer');
+  const pcButton = document.getElementById('pc-button');
+  const phoneButton = document.getElementById('phone-button');
+
+  // PC Button: Hide intro and show PC content
+  pcButton.addEventListener('click', function() {
+    introScreen.style.display = 'none';
+    pcContainer.style.display = 'block'; // Or 'absolute' if you face issues
+    // Manually trigger the resize/scale function to ensure correct scaling
+    if (typeof updateScale === 'function') {
+      updateScale();
+    }
+  });
+
+  // Phone Button: Redirect to mobile page
+  phoneButton.addEventListener('click', function() {
+    window.location.href = 'mobile_index.html';
+  });
+});
+
+
+// --- Original PC Scripts ---
+document.addEventListener('DOMContentLoaded', function() {
+  var toolsetterBox = document.getElementById('toolsetterBox');
+  toolsetterBox.addEventListener('click', function(event) {
+    if (event.ctrlKey) {
+      ahk.autotoolzero(event);
+    } else {
+      console.log("ต้องกด Ctrl+Click เท่านั้น");
+      event.preventDefault();
+    }
+  });
+
   function safeVideoPlay(vid) {
     try {
       if (vid && vid.src && vid.readyState > 0) {
@@ -412,7 +486,6 @@ var toolsetterBox = document.getElementById('toolsetterBox');
     } catch (e) {}
   }
 
-  // Hover preview ทุกปุ่ม
   var boxes = document.querySelectorAll('.videoBox');
   for (var i = 0; i < boxes.length; i++) {
     (function(box) {
@@ -427,7 +500,6 @@ var toolsetterBox = document.getElementById('toolsetterBox');
         hoverVid = this.querySelector('.hover-preview video');
         safeVideoPause(hoverVid);
       });
-      // Touch events
       var lastTap = 0;
       box.addEventListener('touchstart', function(e) {
         var now = new Date().getTime();
@@ -452,7 +524,6 @@ var toolsetterBox = document.getElementById('toolsetterBox');
     })(boxes[i]);
   }
 
-  // Overlay modal (window เพื่อปุ่มเรียกใช้ได้)
   window.closeOverlay = function() {
     var overlay = document.getElementById('overlay');
     var video = document.getElementById('instructionVideo');
@@ -478,36 +549,17 @@ window.onload = function() {
   }
 };
 
-window.onload = function() {
-  var bg = document.getElementById('bgVideo');
-  setTimeout(function() { bg.classList.add('show'); }, 200);
 
-  var title = document.querySelector('.page-title');
-  setTimeout(function() { title.classList.add('show'); }, 1200);
-
-  var boxes = document.querySelectorAll('.videoBox.fadein');
-  for (var i = 0; i < boxes.length; i++) {
-    (function(box, idx) {
-      setTimeout(function() {
-        box.classList.add('show');
-      }, 1200 + idx * 350);
-    })(boxes[i], i);
-  }
-};
-
-
-// Auto-scale fixedContainer as a "game canvas" (center, keep aspect ratio)
 function updateScale() {
   const baseW = 1280, baseH = 1080;
-  const scale = Math.min(window.innerWidth / baseW, window.innerHeight / baseH);
-  const fixed = document.getElementById('fixedContainer');
-  fixed.style.transform = `translate(-50%, -50%) scale(${scale})`;
+  const scale = Math.min(window.innerWidth/baseW, window.innerHeight/baseH);
+  document.documentElement.style.setProperty('--ui-scale', scale);
 }
 window.addEventListener('resize', updateScale);
 window.addEventListener('orientationchange', updateScale);
 updateScale();
 
-// อาจใช้แค่ array 2 ตัวแปร (index ตรงกัน)
+
 const elementSelectors = [
   "#toolsetterBox",
   ".videoBox.main",
@@ -515,18 +567,13 @@ const elementSelectors = [
   ".videoBox.bottom-right",
   "#giantBtn"
 ];
-
 const tooltipTexts = [
   "วัดอัตโนมัติ แค่กด Ctrl แล้วคลิก\n(Auto-measure. Ctrl + click.)",
-  "ทุกการเริ่มต้น... ปุ่มเดียว\n(Every beginning—one button.)"
-,
-  "แม่นหรือไม่ อยู่ที่สอบเทียบ\n(Precision begins with calibration.)"
-,
-  "ผิวโค้ง? แค่ทางผ่าน ไม่ใช่อุปสรรค\n(Curves—just another path.)"
-,
+  "ทุกการเริ่มต้น... ปุ่มเดียว\n(Every beginning—one button.)",
+  "แม่นหรือไม่ อยู่ที่สอบเทียบ\n(Precision begins with calibration.)",
+  "ผิวโค้ง? แค่ทางผ่าน ไม่ใช่อุปสรรค\n(Curves—just another path.)",
   "“อยากไปเร็ว… ยืนบนไหล่ผม แค่คลิก”\n(Want to leap? Stand on my shoulders—click.)"
 ];
-
 let tooltipDiv = null;
 let stepIndex = 0;
 
@@ -536,29 +583,23 @@ function showStepTooltip(target, text) {
     tooltipDiv.className = "step-tooltip";
     document.body.appendChild(tooltipDiv);
   }
-
-  // แยกบรรทัดและจัด format สองภาษา
-  const lines = text.split('\n');
-  let line1 = lines[0] || "";
-  let line2 = lines[1] || "";
-  let line3 = lines[2] || "";
-  let line4 = lines[3] || "";
-
-  // ถ้ามี 4 บรรทัด ให้แสดงคู่ไทย-อังกฤษ
+  var lines = text.split('\n');
+  var line1 = lines[0] || "";
+  var line2 = lines[1] || "";
+  var line3 = lines[2] || "";
+  var line4 = lines[3] || "";
   if (lines.length >= 4) {
     tooltipDiv.innerText = line1 + " " + line2 + "\n" + line3 + " " + line4;
   } else {
-    // ถ้าเป็นข้อความทั่วไป ให้แสดงตามปกติ
     tooltipDiv.innerText = text;
   }
-
   tooltipDiv.classList.add("active");
-  setTimeout(() => {
-    const rect = target.getBoundingClientRect();
-    const ttWidth = tooltipDiv.offsetWidth;
-    const ttHeight = tooltipDiv.offsetHeight;
-    const left = rect.left + rect.width/2 - ttWidth/2;
-    const top  = rect.top  + rect.height/2 - ttHeight/2;
+  setTimeout(function() {
+    var rect = target.getBoundingClientRect();
+    var ttWidth = tooltipDiv.offsetWidth;
+    var ttHeight = tooltipDiv.offsetHeight;
+    var left = rect.left + rect.width/2 - ttWidth/2;
+    var top  = rect.top  + rect.height/2 - ttHeight/2;
     tooltipDiv.style.left = left + "px";
     tooltipDiv.style.top  = top  + "px";
   }, 10);
@@ -567,14 +608,15 @@ function showStepTooltip(target, text) {
 function hideStepTooltip() {
   if (tooltipDiv) tooltipDiv.classList.remove("active");
 }
+
 function showNextStep() {
   hideStepTooltip();
-  const selector = elementSelectors[stepIndex % elementSelectors.length];
-  const text = tooltipTexts[stepIndex % tooltipTexts.length];
-  const target = document.querySelector(selector);
+  var selector = elementSelectors[stepIndex % elementSelectors.length];
+  var text = tooltipTexts[stepIndex % tooltipTexts.length];
+  var target = document.querySelector(selector);
   if (target) {
     showStepTooltip(target, text);
-    setTimeout(() => {
+    setTimeout(function() {
       stepIndex++;
       showNextStep();
     }, 5000);
@@ -582,8 +624,7 @@ function showNextStep() {
 }
 document.addEventListener("DOMContentLoaded", showNextStep);
 
-
-
 </script>
 </body>
 </html>
+```

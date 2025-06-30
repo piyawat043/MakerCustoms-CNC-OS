@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Surface Scan (Mobile)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100vh;
+      background: black;
+      font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .main-image {
+      width: 80vw;
+      max-width: 300px;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+      margin-bottom: 25px;
+    }
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px; /* ระยะห่างระหว่างปุ่ม */
+      width: 90vw;
+      max-width: 350px;
+    }
+
+    .action-button {
+      font-size: 18px;
+      background: rgba(40, 40, 40, 0.7);
+      color: white;
+      border: 1px solid #555;
+      border-radius: 10px;
+      padding: 14px 20px;
+      cursor: pointer;
+      width: 100%;
+      backdrop-filter: blur(5px);
+      transition: background-color 0.2s ease;
+    }
+
+    .action-button:active {
+      background-color: rgba(70, 70, 70, 0.9);
+    }
+    
+    .action-button.primary {
+        background: rgba(0, 123, 255, 0.7);
+        border-color: #007bff;
+        font-weight: bold;
+    }
+    .action-button.primary:active {
+        background: rgba(0, 100, 220, 0.9);
+    }
+
+    #backButton {
+      margin-top: 30px; /* เว้นระยะห่างจากกลุ่มปุ่มด้านบน */
+      background: none;
+      border: 1px solid #777;
+    }
+
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.9);
+      z-index: 998;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #overlay video {
+      width: 100vw;
+      max-height: 80vh;
+    }
+
+    #overlay .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <video id="bgVideo" autoplay muted loop playsinline>
+    <source src="bgstart.mp4" type="video/mp4">
+  </video>
+
+  <div class="main-container">
+    <img src="startssscan.png" alt="Smart Surface scan" class="main-image">
+
+    <div class="button-group">
+      <button class="action-button primary" onclick="ahk.smartsurface(event);">เริ่มสแกนพื้นผิว</button>
+      <button class="action-button" onclick="openOverlay('ssssvideo.mp4')">ดูตัวอย่างวิดีโอ</button>
+      <button class="action-button" onclick="openOverlay('video-ex1-surface.mp4')">ตั้งค่าก่อนใช้งาน</button>
+      <button id="backButton" class="action-button" onclick="window.location.href='mobile_index.html'">ย้อนกลับ</button>
+    </div>
+  </div>
+
+  <div id="overlay">
+    <div class="close-btn" onclick="closeOverlay()">×</div>
+    <video id="instructionVideo" controls>
+      <source src="" type="video/mp4">
+    </video>
+  </div>
+
+  <script>
+    function openOverlay(videoSrc) {
+      const overlay = document.getElementById('overlay');
+      const video = document.getElementById('instructionVideo');
+      video.pause();
+      video.src = videoSrc;
+      video.load();
+      overlay.style.display = 'flex';
+      video.play();
+    }
+
+    function closeOverlay() {
+      const overlay = document.getElementById('overlay');
+      const video = document.getElementById('instructionVideo');
+      video.pause();
+      video.src = "";
+      overlay.style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
