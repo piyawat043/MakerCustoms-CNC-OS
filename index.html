@@ -6,6 +6,52 @@
   <title>CNC UI main</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+	  #intro-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #10141a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100000;
+  color: white;
+  font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
+  text-align: center;
+}
+#intro-screen h1 {
+  font-size: 48px;
+  font-weight: bold;
+  text-shadow: 0 0 14px rgba(0, 123, 255, 0.7);
+  margin-bottom: 10px;
+}
+#intro-screen p {
+  font-size: 18px;
+  opacity: 0.85;
+  margin-bottom: 40px;
+}
+.choice-button-container {
+  display: flex;
+  gap: 20px;
+}
+.choice-button {
+  padding: 15px 30px;
+  font-size: 20px;
+  color: white;
+  background: linear-gradient(135deg, #232526, #414345);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+.choice-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 123, 255, 0.3);
+}
 html, body {
   margin: 0; padding: 0;
   width: 100vw; height: 100vh;
@@ -311,6 +357,15 @@ html, body {
   </style>
 </head>
 <body>
+	<div id="intro-screen">
+  <h1>Welcome to iMak</h1>
+  <p>Please select your version</p>
+  <div class="choice-button-container">
+    <button id="pc-button" class="choice-button">iMak PC</button>
+    <button id="phone-button" class="choice-button">iMak Phone</button>
+  </div>
+</div>
+	
  <div id="fixedContainer">
 <video id="bgVideo" class="fadein" autoplay muted loop playsinline>
   <source src="bgiMak.mp4" type="video/mp4">
