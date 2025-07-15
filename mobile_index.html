@@ -2,19 +2,17 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>CNC UI - Main (Mobile)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CNC UI - Mobile</title>
   <style>
-    /* --- General Styles --- */
-    body, html {
+    html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       min-height: 100vh;
-      background: #10141a;
+      background-color: #000;
       font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
-      color: white;
-      overflow-x: hidden;
+      box-sizing: border-box;
     }
 
     #bgVideo {
@@ -23,57 +21,75 @@
       left: 0;
       width: 100vw;
       height: 100vh;
+      z-index: 0;
       object-fit: cover;
-      z-index: -1;
       opacity: 1;
     }
 
-    /* --- Main Container --- */
-    .main-container {
+    #mainContainer {
+      position: relative;
+      z-index: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 20px;
-      gap: 25px; /* ระยะห่างระหว่างปุ่มเมนู */
+      gap: 20px; /* สร้างระยะห่างระหว่างปุ่ม */
     }
 
-    /* --- Header --- */
+    .qr-container {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      width: 100px;
+      text-align: center;
+      font-size: 12px;
+      color: #fff;
+      text-shadow: 0 0 3px black;
+    }
+    .qr-container img {
+      width: 100%;
+      height: auto;
+    }
+
     .page-title {
       text-align: center;
       font-size: 28px;
+      color: #ffffff;
       font-weight: bold;
       text-shadow: 0 0 14px rgba(0, 123, 255, 0.7);
-      margin: 20px 0;
-      line-height: 1.3;
+      line-height: 1.2;
+      margin-top: 20px;
+      margin-bottom: 20px;
     }
     .page-title span {
       display: block;
-      font-size: 15px;
-      margin-top: 5px;
-      opacity: 0.85;
+      font-size: 14px;
+      margin-top: 4px;
+      opacity: 0.75;
+      letter-spacing: 0.3px;
     }
 
-    /* --- Menu Buttons --- */
-    .menu-button {
+    .videoBox {
       position: relative;
       width: 90vw;
       max-width: 450px;
       border-radius: 20px;
-      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
       cursor: pointer;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-      transition: transform 0.2s ease;
-      background: rgba(0,0,0,0.1);
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .menu-button:active {
-      transform: scale(0.96);
+    .videoBox:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 30px rgba(0, 123, 255, 0.5);
     }
-    .menu-button .preview {
+    .videoBox .preview {
+      display: block;
       width: 100%;
       height: auto;
-      display: block;
     }
-    .menu-button .label {
+    .videoBox .label {
       position: absolute;
       bottom: 0;
       left: 0;
@@ -81,102 +97,220 @@
       color: white;
       text-shadow: 0 0 5px black;
       font-size: 16px;
-      line-height: 1.4;
-      padding: 12px 8px;
-      background: rgba(0,0,0,0.7);
+      line-height: 1.3;
+      padding: 10px;
+      background: rgba(0,0,0,0.6);
       text-align: center;
+      box-sizing: border-box;
     }
 
-    /* --- Footer Elements --- */
-    .quote-text {
-      text-align: center;
-      padding: 20px;
-      margin-top: 20px;
-      max-width: 90vw;
-      line-height: 1.6;
-      font-size: 16px;
-      text-shadow: 0 0 8px rgba(0,0,0,0.7);
+    .center-btn {
+      width: 80vw;
+      max-width: 400px;
+      height: auto;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      border-radius: 12px;
     }
-    .quote-text span {
-      display: block;
+    .center-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    .overlay-text {
+      color: #fff;
+      text-align: center;
+      padding: 10px 20px;
       font-size: 14px;
-      opacity: 0.85;
-      margin-top: 8px;
+      opacity: 0.8;
+      white-space: pre-line;
+      text-shadow: 0 0 5px black;
+    }
+    
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.8);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+    }
+    #overlayContent {
+      position: relative;
+      width: 95vw;
+      max-width: 720px;
+    }
+    #instructionVideo {
+      width: 100%;
+      border-radius: 14px;
+      border: 2px solid white;
+    }
+    #closeOverlay {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      font-size: 30px;
+      color: #fff;
+      cursor: pointer;
+      background: none;
+      border: none;
     }
 
-    .external-link {
-      display: inline-block;
-      padding: 12px 20px;
-      margin-top: 15px;
+    .fixed-buttons-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .fixed-buttons-container button {
+      padding: 12px 18px;
       font-size: 16px;
-      background: linear-gradient(135deg, #232526, #414345);
       color: white;
       font-weight: bold;
+      border: none;
       border-radius: 12px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-      text-decoration: none;
-      text-align: center;
+      cursor: pointer;
+      text-align: left;
+      line-height: 1.4;
     }
-    .external-link span {
-      font-size: 13px;
-      font-weight: normal;
-      opacity: 0.85;
-      display: block;
+    #statsBtn {
+      background: linear-gradient(135deg, #0072f5, #1fa8ff);
+    }
+    #giantBtn {
+       background: linear-gradient(135deg, #232526, #414345);
     }
   </style>
 </head>
 <body>
-
   <video id="bgVideo" autoplay muted loop playsinline>
-    <source src="imakbg.mp4" type="video/mp4">
+    <source src="bgiMak.mp4" type="video/mp4">
   </video>
 
-  <div class="main-container">
+  <div id="mainContainer">
+
+    <div class="qr-container">
+      <img src="qrcodeimak.png" alt="QR Code iMak">
+      <div>สแกนเข้าระบบ iMak</div>
+    </div>
 
     <div class="page-title">
       iMak
       <span>“The Creative Human’s Assistant”<br>"ผู้ช่วยของการสร้างสรรค์"</span>
     </div>
 
-    <div class="menu-button" onclick="location.href='mobile_page_3dprobe.html'">
+    <div class="videoBox" onclick="location.href='mobile_page_3dprobe.html'">
       <img src="probezerov3.png" class="preview" alt="Semi-Auto Probe Interface">
       <div class="label">เข้าหน้าใช้งานหัววัดกึ่งอัตโนมัติ<br>Semi-Auto Probe Interface</div>
     </div>
+    
+    <div class="videoBox" id="toolsetterBox">
+      <img src="atzv3.png" class="preview" alt="One-click Tool Measuring">
+      <div class="label">วัดเครื่องมือด้วยปุ่มเดียว<br>One-click Tool Measuring</div>
+    </div>
 
-    <div class="menu-button" onclick="location.href='mobile_page_setup.html'">
+    <div class="videoBox" onclick="location.href='mobile_page_setup.html'">
       <img src="setupcncv2.png" class="preview" alt="Semi-Auto Calibration">
       <div class="label">สอบเทียบกึ่งอัตโนมัติ<br>Semi-Auto Calibration</div>
     </div>
     
-    <div class="menu-button" onclick="location.href='mobile_page_surface.html'">
+    <div class="videoBox" onclick="location.href='mobile_page_surface.html'">
       <img src="sssv22.png" class="preview" alt="One-click Curved Engraving">
       <div class="label">แกะสลักผิวโค้งปุ่มเดียว<br>One-click Curved Engraving</div>
     </div>
+	
+	  <img 
+      src="usercontrolcnc.png" 
+      alt="ผู้ใช้ต้องรู้ คลิก!" 
+      class="center-btn"
+      onclick="window.location.href='UserControl.html';"
+    >
 
-    <div class="menu-button" onclick="ahk.autotoolzero(event);"> <img src="atzv3.png" class="preview" alt="One-click Tool Measuring">
-      <div class="label">วัดเครื่องมือด้วยปุ่มเดียว<br>One-click Tool Measuring</div>
+    <div class="overlay-text">
+      <p id="einstein-quote"></p>
     </div>
-
-    <div class="quote-text">
-      เรายืนอยู่บนไหล่ของยักษ์<br>
-      <span>We are standing on the shoulders of giants.<br>— เซอร์ ไอแซก นิวตัน (Sir Isaac Newton)</span>
-    </div>
-    
-    <a href="https://piyawat043.github.io/piyawatzone/" class="external-link">
-      🧠 คลิกที่นี่เพื่อยืนบนไหล่ของผม<br>
-      <span>Click here to stand on my shoulders</span>
-    </a>
-
   </div>
 
-  <script>
-    // ไม่จำเป็นต้องใช้ JavaScript ที่ซับซ้อนสำหรับเวอร์ชันมือถือ
-    // การทำงานหลักจะอยู่ที่ onclick ใน HTML element โดยตรง
-    document.addEventListener('DOMContentLoaded', function() {
-      // สามารถเพิ่มโค้ดสำหรับ Mobile-specific ได้ที่นี่ หากจำเป็น
-      console.log("Mobile Index page loaded.");
-    });
-  </script>
+  <div id="overlay">
+    <div id="overlayContent">
+      <button id="closeOverlay" onclick="closeOverlay()">×</button>
+      <video id="instructionVideo" controls playsinline></video>
+    </div>
+  </div>
+  
+<div class="fixed-buttons-container">
+  <a href="https://piyawat043.github.io/Milling-Wizard-Maker-Customs/" target="_blank">
+    <button id="statsBtn">
+      เครื่องคำนวนอัตราการป้อน<br>Milling Wizard
+    </button>
+  </a>
+  <a href="https://piyawat043.github.io/piyawatzone/" target="_blank">
+    <button id="giantBtn">
+      🧠 คลังความรู้ Piyawat Zone<br>เทคนิคต่างๆรวมไว้ที่นี้
+    </button>
+  </a>
+</div>
+
+
+<script>
+  // --- Einstein Quotes ---
+  (function(){
+    var quotes = [
+      "\"อย่าพยายามที่จะเป็นคนที่ประสบความสำเร็จ \nแต่จงพยายามที่จะเป็นบุคคลที่มีคุณค่า\n-อัลเบิร์ต ไอน์สไตน์-",
+      "การศึกษานั้นไม่ใช่การเรียนรู้เกี่ยวกับความจริง \nแต่การเรียนรู้เป็นการฝึกจิตใจให้รู้จักคิด\n-อัลเบิร์ต ไอน์สไตน์-",
+      "คนใดที่ไม่เคยทำผิดพลาดมาก่อน\nแสดงว่าคน ๆ นั้น ไม่เคยลองทำอะไรในสิ่งใหม่ ๆ ดูเลย\n-อัลเบิร์ต ไอน์สไตน์-",
+      "จงอย่ายอมแพ้ในสิ่งที่คุณต้องการที่จะทำมันจริง ๆ \nซึ่งคนที่มีความฝันอันยิ่งใหญ่นั้นมีพลังมากกว่าคนที่มีแต่ข้อเท็จจริง\n-อัลเบิร์ต ไอน์สไตน์-"
+    ];
+    function updateQuote() {
+      var el = document.getElementById('einstein-quote');
+      var txt = quotes[Math.floor(Math.random() * quotes.length)];
+      if(el) el.textContent = txt;
+    }
+    updateQuote();
+    setInterval(updateQuote, 15000);
+  })();
+
+  // --- Video Popup Logic ---
+  function openVideoPopup(videoSrc) {
+    var overlay = document.getElementById('overlay');
+    var videoPlayer = document.getElementById('instructionVideo');
+    if (overlay && videoPlayer) {
+      videoPlayer.src = videoSrc;
+      videoPlayer.load();
+      videoPlayer.play();
+      overlay.style.display = 'flex';
+    }
+  }
+
+  function closeOverlay() {
+    var overlay = document.getElementById('overlay');
+    var video = document.getElementById('instructionVideo');
+    if (video) {
+        video.pause();
+        video.src = ""; // Stop video loading
+    }
+    if (overlay) overlay.style.display = 'none';
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Simplified click event for toolsetterBox
+    // Now it only opens the video popup, no Ctrl+Click needed.
+    var toolsetterBox = document.getElementById('toolsetterBox');
+    if(toolsetterBox) {
+        toolsetterBox.addEventListener('click', function(event) {
+            // *** Important: 'onetool.mp4' must be in the same folder ***
+            openVideoPopup('onetool.mp4'); 
+        });
+    }
+  });
+</script>
 
 </body>
 </html>

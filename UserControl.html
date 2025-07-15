@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>User Control</title>
+  <style>
+    body {
+      margin: 0;
+      background: url('bgmanual.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: sans-serif;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Main Container: แบ่งหน้าจอเป็น ซ้าย-ขวา */
+    #main-container {
+      display: flex;
+      width: 100%;
+      max-width: 1200px; /* กำหนดความกว้างสูงสุด */
+      justify-content: space-around;
+      align-items: flex-start;
+      padding: 20px;
+    }
+
+    /* Left Panel: แถบควบคุมด้านซ้าย */
+    #left-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 40%;
+      max-width: 400px;
+    }
+
+    /* Header bar in left panel */
+    #header-bar {
+      display: flex;
+      gap: 10px;
+    }
+
+    #header-bar button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #444;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .control-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #666;
+      color: #fff;
+      font-size: 24px; /* ปรับขนาดฟอนต์ให้พอดี */
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+      text-align: center;
+      padding: 15px;
+      margin: 0;
+      width: 100%; /* ทำให้ปุ่มเต็มความกว้างของ Panel */
+      height: auto;
+    }
+
+    .control-button:hover {
+      background-color: #888;
+      transform: scale(1.03);
+    }
+    
+    /* Right Panel: พื้นที่แสดงวิดีโอ */
+    #right-panel {
+      width: 720px;
+      height: 720px;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid #fff;
+    }
+
+    #preview-video {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      object-fit: cover; /* ทำให้วิดีโอเต็มพื้นที่โดยไม่เสียสัดส่วน */
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="main-container">
+
+    <div id="left-panel">
+      <div id="header-bar">
+          <button id="backButton" onclick="window.location.href='index.html'">ย้อนกลับ</button>
+      </div>
+      <button class="control-button" data-video="how to stop.mp4">การหยุด</button>
+	  <button class="control-button" data-video="how to zero.mp4">การกำหนด Zero</button>
+      <button class="control-button" data-video="gotozero.mp4">การไปที่ Zero</button>
+	   <button class="control-button" data-video="usercase1.mp4">ขยับครั้งล่ะ</button>
+      <button class="control-button" data-video="usecase2.mp4">กำหนดให้ไปตำแหน่ง</button>
+      <button class="control-button" data-video="Ngcode.mp4">ข้าม Gcode</button>
+      <button class="control-button" data-video="searchName_guide.mp4">ค้นหาชื่อใน Gcode</button>
+      <button class="control-button" data-video="next process.mp4">ข้ามกระบวนการทำงาน</button>
+      <button class="control-button" data-video="zclear.mp4">ตั้งค่ายกหัวกัด</button>
+	  <button class="control-button" data-video="3dprobe.mp4">เปิดหัววัด</button>
+    </div>
+
+    <div id="right-panel">
+      <video id="preview-video" controls muted autoplay loop>
+          <source src="" type="video/mp4">
+          เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอนี้
+      </video>
+    </div>
+
+  </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var videoPlayer = document.getElementById('preview-video');
+    var allButtons = document.querySelectorAll('.control-button, .control-button-header');
+
+    // แปลง NodeList เป็น Array เพื่อใช้ forEach ได้ใน IE
+    var buttonsArray = [];
+    for (var i = 0; i < allButtons.length; i++) {
+      buttonsArray.push(allButtons[i]);
+    }
+
+    buttonsArray.forEach(function (button) {
+      // เมื่อนำเมาส์ไปวางบนปุ่ม
+      button.addEventListener('mouseenter', function () {
+        var videoSrc = button.getAttribute('data-video');
+        if (videoSrc && videoPlayer.src !== videoSrc) {
+          videoPlayer.src = videoSrc;
+
+          var playPromise = videoPlayer.play();
+          if (playPromise && typeof playPromise.then === 'function') {
+            playPromise.catch(function (error) {
+              console.log("Autoplay was prevented: ", error);
+            });
+          }
+        }
+      });
+
+      // เมื่อนำเมาส์ออกจากปุ่ม (ทางเลือก: หยุดวิดีโอ)
+      button.addEventListener('mouseleave', function () {
+        // videoPlayer.pause(); // ถ้าต้องการหยุดวิดีโอเมื่อเอาเมาส์ออก
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
