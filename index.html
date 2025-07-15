@@ -537,6 +537,27 @@ html, body {
       window.onload = init;
     }
   })();
+document.addEventListener('DOMContentLoaded', function() {
+  const introScreen = document.getElementById('intro-screen');
+  const pcContainer = document.getElementById('fixedContainer');
+  const pcButton = document.getElementById('pc-button');
+  const phoneButton = document.getElementById('phone-button');
+
+  // PC Button: Hide intro and show PC content
+  pcButton.addEventListener('click', function() {
+    introScreen.style.display = 'none';
+    pcContainer.style.display = 'block'; // Or 'absolute' if you face issues
+    // Manually trigger the resize/scale function to ensure correct scaling
+    if (typeof updateScale === 'function') {
+      updateScale();
+    }
+  });
+
+  // Phone Button: Redirect to mobile page
+  phoneButton.addEventListener('click', function() {
+    window.location.href = 'mobile_index.html';
+  });
+});
 
 document.addEventListener('DOMContentLoaded', function() {
   
